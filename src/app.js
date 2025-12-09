@@ -41,11 +41,13 @@ app.get("/books", (req, res, next) => {
 app.get("/books/:id", (req, res, next) => {
   const id = req.params.id;
 
-  const book = dataBooks.find((el) => {
-    return el.id === Number(id);
-  });
-
-  res.json(book);
+  BookModel.findById(id)
+    .then((book) => {
+      res.json(book);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 app.post("/books", (req, res, next) => {
