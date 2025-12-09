@@ -38,6 +38,18 @@ app.get("/books", (req, res, next) => {
     });
 });
 
+app.get("/books/search", (req, res, next) => {
+  const authorQuery = req.query.author;
+
+  BookModel.findOne({ author: authorQuery })
+    .then((books) => {
+      res.json(books);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 app.get("/books/:id", (req, res, next) => {
   const id = req.params.id;
 
@@ -75,10 +87,51 @@ app.post("/users", (req, res, next) => {
     });
 });
 
+app.get("/users", (req, res, next) => {
+  UserModel.find()
+    .then((users) => {
+      res.json(users);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 // LIBRARIES
 app.get("/libraries", (req, res, next) => {
   res.json(dataLibraries);
 });
+
+app.get("/libraries", (req, res, next) => {
+  res.json(dataLibraries);
+});
+
+app.delete("/books/:id", (req, res, next) => {
+  const id = req.params.id;
+
+  BookModel.findByIdAndDelete(id)
+    .then(() => {
+      res.json("Book deleted successfully");
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.patch("/books/:id", (req, res, next) => {
+  const id = req.params.id;
+  const updates = req.body;
+
+  BookModel.findByIdAndUpdate(id, updates, { new: true })
+    .then((updatedBook) => {
+      res.json(updatedBook);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+// find by querysstrings
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
