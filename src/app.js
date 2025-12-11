@@ -81,7 +81,7 @@ app.post("/books", (req, res, next) => {
 });
 
 // USERS
-app.post("/users", (req, res, next) => {
+app.post("/register", (req, res, next) => {
   const newUser = req.body;
 
   UserModel.create(newUser)
