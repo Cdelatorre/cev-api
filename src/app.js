@@ -6,6 +6,11 @@ const path = require("path");
 const BookModel = require("./models/Book.model");
 const UserModel = require("./models/User.model");
 const app = express();
+const cors = require("cors");
+
+// app.use(cors()); TODOS LOS DOMINIOS PERMITIDOS
+
+app.use(cors());
 
 const PORT = process.env.PORT;
 const dataBooks = require(path.join(__dirname, "data.json"));
@@ -30,6 +35,7 @@ app.get("/", (req, res, next) => {
 
 app.get("/books", (req, res, next) => {
   BookModel.find()
+    .populate("user")
     .then((books) => {
       res.json(books);
     })
@@ -98,12 +104,12 @@ app.get("/users", (req, res, next) => {
 });
 
 // LIBRARIES
-app.get("/libraries", (req, res, next) => {
-  res.json(dataLibraries);
-});
 
 app.get("/libraries", (req, res, next) => {
-  res.json(dataLibraries);
+  res.render(`
+      <h1>hola esto es un h1</h1>
+      <p>y esto un parrafo</p>
+    `);
 });
 
 app.delete("/books/:id", (req, res, next) => {
