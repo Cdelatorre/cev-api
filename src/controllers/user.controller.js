@@ -43,7 +43,7 @@ module.exports.loginUser = (req, res, next) => {
         if (!isPasswordValid) {
           return res.status(401).json({ message: "Credenciales incorrectas" });
         } else {
-          return res.status(200).json("todo bien!");
+          return res.status(200).json(user);
         }
       }
     })
@@ -56,6 +56,20 @@ module.exports.getUsers = (req, res, next) => {
   UserModel.find()
     .then((users) => {
       res.json(users);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+};
+
+module.exports.getUserById = (req, res, next) => {
+  const id = req.params.id;
+
+  UserModel.findById(id)
+    .populate("books")
+    .then((user) => {
+      console.log(user);
+      res.json(user);
     })
     .catch((err) => {
       res.json(err);

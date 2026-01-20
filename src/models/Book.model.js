@@ -13,6 +13,14 @@ const bookSchema = new mongoose.Schema(
     year: {
       type: Number,
     },
+    image: {
+      type: String, // URL de la imagen en Cloudinary
+      default: null,
+    },
+    imagePublicId: {
+      type: String, // ID público de Cloudinary para poder eliminar la imagen
+      default: null,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
