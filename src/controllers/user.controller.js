@@ -53,7 +53,9 @@ module.exports.loginUser = (req, res, next) => {
 };
 
 module.exports.getUsers = (req, res, next) => {
-  UserModel.find()
+  const userSession = req.user;
+
+  UserModel.find({ _id: { $ne: userSession.id } })
     .then((users) => {
       res.json(users);
     })

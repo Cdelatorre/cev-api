@@ -27,13 +27,14 @@ const bookSchema = new mongoose.Schema(
     },
   },
   {
+    timestamps: true,
     toJSON: {
       transform: (doc, ret) => {
         ret.id = ret._id; // copiar _id en id
         delete ret._id; // eliminar _id
       },
     },
-  }
+  },
 );
 
 module.exports = mongoose.model("Book", bookSchema);
