@@ -28,7 +28,7 @@ router.get("/books/:id", booksController.getBookById);
 router.post(
   "/books",
   authenticateToken,
-  upload.single("image"),
+  upload.single("image"), /// esto es lo mas importante de multer
   booksController.createBook,
 );
 router.delete("/books/:id", authenticateToken, booksController.deleteBook);

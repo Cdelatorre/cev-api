@@ -1,12 +1,12 @@
 const UserModel = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../config/jwt.config");
+const transporter = require("../config/mailer.config");
 
 // Controlador de registro
 const register = async (req, res) => {
   try {
     const newUser = req.body;
-    console.log("entro");
 
     // Verificar si el usuario ya existe
     const existingUser = await UserModel.findOne({ email: newUser.email });
@@ -31,11 +31,33 @@ const register = async (req, res) => {
       email: user.email,
     };
 
-    res.status(201).json({
-      message: "Usuario creado correctamente",
-      token,
-      user: userResponse,
-    });
+    transporter
+      .sendMail({
+        from: process.env.EMAIL_USER,
+        to: newUser.email,
+        subject: "Bienvenido a Mi App",
+        html: `<b>
+          Hola ${newUser.name}, bienvenido a Mi App!
+          <a href="https://localhost:5173/authenticate/${user._id}">VERIFICA TU EMAIL</a>
+        </b>`,
+        attachments: [
+          {
+            filename: "welcome.png",
+            path: "src/assets/welcome.png",
+          },
+        ],
+      })
+      .then(() => {
+        console.log("Email de bienvenida enviado");
+        res.status(201).json({
+          message: "Usuario creado correctamente",
+          token,
+          user: userResponse,
+        });
+      })
+      .catch((err) => {
+        console.error("Error al enviar email de bienvenida:", err);
+      });
   } catch (err) {
     res
       .status(500)

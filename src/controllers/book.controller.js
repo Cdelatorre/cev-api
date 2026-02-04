@@ -40,21 +40,24 @@ module.exports.getBookById = (req, res, next) => {
 
 module.exports.createBook = (req, res, next) => {
   const newBook = req.body;
-
+  console.log("REQ.FILE", req.file);
   // Si se subió una imagen, agregar la URL y el public_id
   if (req.file) {
     newBook.image = req.file.path; // URL de Cloudinary
-    newBook.imagePublicId = req.file.filename; // Public ID de Cloudinary
   }
 
   BookModel.create(newBook)
     .then((bookCreated) => {
-      res.status(201).json({ message: "Libro creado exitosamente", book: bookCreated });
+      res
+        .status(201)
+        .json({ message: "Libro creado exitosamente", book: bookCreated });
     })
     .catch((err) => {
-      res.status(500).json({ message: "Error al crear libro", error: err.message });
+      res
+        .status(500)
+        .json({ message: "Error al crear libro", error: err.message });
     });
-}
+};
 
 module.exports.deleteBook = async (req, res, next) => {
   try {
@@ -72,16 +75,17 @@ module.exports.deleteBook = async (req, res, next) => {
     }
 
     // Eliminar el libro de la base de datos
-    await
-      BookModel.findByIdAndDelete(id);
+    await BookModel.findByIdAndDelete(id);
 
     res.json({ message: "Libro eliminado exitosamente" });
   } catch (err) {
-    res.status(500).json({ message: "Error al eliminar libro", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error al eliminar libro", error: err.message });
   }
 };
 
-    // Si el libro tiene imagen, eliminarla de Cloudinary
+// Si el libro tiene imagen, eliminarla de Cloudinary
 module.exports.updateBook = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -102,7 +106,9 @@ module.exports.updateBook = async (req, res, next) => {
       updates.imagePublicId = req.file.filename;
     }
 
-    const updatedBook = await BookModel.findByIdAndUpdate(id, updates, { new: true });
+    const updatedBook = await BookModel.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
 
     if (!updatedBook) {
       return res.status(404).json({ message: "Libro no encontrado" });
@@ -110,10 +116,11 @@ module.exports.updateBook = async (req, res, next) => {
 
     res.json({ message: "Libro actualizado exitosamente", book: updatedBook });
   } catch (err) {
-    res.status(500).json({ message: "Error al actualizar libro", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error al actualizar libro", error: err.message });
   }
 };
-
 
 module.exports.updateBook = (req, res, next) => {
   const id = req.params.id;
